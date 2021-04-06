@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "pdf js test runtime",
+            "type": "chrome",
+            "request": "launch",
+            "sourceMaps": false,
+            "file": "${workspaceRoot}/web/viewer.html"  
+        },
+        {
+            "name": "pdf render.html",
+            "type": "chrome",
+            "request": "launch",
+            "sourceMaps": false,
+            "file": "${workspaceRoot}/objbrowser/render.htm"  
+        },
+   
+        {
+
+                "name": "Launch index.html (disable sourcemaps)",
+                "type": "chrome",
+                "request": "launch",
+                "sourceMaps": false,
+                "file": "${workspaceRoot}/objbrowser/index.htm"  
+            
+        }
+    ]
+
+}

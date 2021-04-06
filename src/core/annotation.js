@@ -124,7 +124,7 @@ class AnnotationFactory {
             return new ChoiceWidgetAnnotation(parameters);
         }
         warn(
-          'Unimplemented widget field type "' +
+          'newtribe Unimplemented widget field type "' +
             fieldType +
             '", ' +
             "falling back to base field type."
@@ -1051,10 +1051,13 @@ class WidgetAnnotation extends Annotation {
     // Hide signatures because we cannot validate them, and unset the fieldValue
     // since it's (most likely) a `Dict` which is non-serializable and will thus
     // cause errors when sending annotations to the main-thread (issue 10347).
+    //modify by newtribe 2021.4.2,show pdf signature by default .
+
     if (data.fieldType === "Sig") {
-      data.fieldValue = null;
-      this.setFlags(AnnotationFlag.HIDDEN);
-      data.hidden = true;
+      Console.info(data.fieldValue) ;
+      // data.fieldValue = null;
+      // this.setFlags(AnnotationFlag.HIDDEN);
+      // data.hidden = true;
     }
   }
 

@@ -77,6 +77,7 @@ Node.prototype = {
 
 function createWalker(data, root) {
   var pdf = new PDFDocument(null, data);
+ 
   pdf.parseStartXRef();
   pdf.parse();
   var xref = pdf.xref;
@@ -223,6 +224,7 @@ HtmlPrint.prototype.visit = function (ul, node, walk) {
   var span = document.createElement('span');
   span.textContent = description;
   li.appendChild(span);
+      li.classList.add('expanded');
 
   if (isDict(obj) || isStream(obj) || isArray(obj)) {
     var newUl = document.createElement('ul');
@@ -250,6 +252,9 @@ HtmlPrint.prototype.visit = function (ul, node, walk) {
   }
   ul.appendChild(li);
 
+  // if (isDict(obj) || isStream(obj) || isArray(obj)) {
+  //   return true; 
+  // }
   return false;
 };
 
@@ -283,6 +288,7 @@ function go(data) {
 
   // Expand first level.
   document.querySelector('.expando > span').click();
+
 }
 
 window.addEventListener('change', function webViewerChange(evt) {
@@ -311,6 +317,17 @@ window.addEventListener('change', function webViewerChange(evt) {
 window.addEventListener('hashchange', function (evt) {
   go(Browser.data);
 });
+
+function showpdf() {
+
+  console.log("start render ..............");
+
+  pdfjsLib.promise.then(function(pdf) {
+    // you can now use *pdf* here
+    console.log("start render ..............");
+  });
+
+}
 
 var params = parseQueryString(document.location.search.substring(1));
 if (params.file) {
