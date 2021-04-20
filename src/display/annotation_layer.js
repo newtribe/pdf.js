@@ -529,12 +529,16 @@ class TextAnnotationElement extends AnnotationElement {
 }
 
 class WidgetAnnotationElement extends AnnotationElement {
+
+  constructor(parameters) {
+    const isRenderable = true;
+    super(parameters, { isRenderable, createQuadrilaterals: true });
+  }
   render() {
     // Show only the container for unsupported field types.
-    if (this.data.alternativeText) {
-      this.container.title = this.data.alternativeText;
-    }
+    this.container.className = "widgetAnnotation";
 
+  
     return this.container;
   }
 
@@ -2047,6 +2051,7 @@ class AnnotationLayer {
         hasJSActions: parameters.hasJSActions,
         mouseState: parameters.mouseState || { isDown: false },
       });
+    
       if (element.isRenderable) {
         const rendered = element.render();
         if (data.hidden) {

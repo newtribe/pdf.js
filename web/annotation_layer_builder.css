@@ -14,6 +14,7 @@
  */
 
 .annotationLayer section {
+  background-color:red;
   position: absolute;
   text-align: initial;
 }

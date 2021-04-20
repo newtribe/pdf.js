@@ -1054,7 +1054,7 @@ class WidgetAnnotation extends Annotation {
     //modify by newtribe 2021.4.2,show pdf signature by default .
 
     if (data.fieldType === "Sig") {
-      Console.info(data.fieldValue) ;
+      console.info("......in annotation Sig") ;
       // data.fieldValue = null;
       // this.setFlags(AnnotationFlag.HIDDEN);
       // data.hidden = true;
