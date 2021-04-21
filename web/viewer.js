@@ -132,10 +132,14 @@ function getViewerConfiguration() {
       thumbnailButton: document.getElementById("viewThumbnail"),
       outlineButton: document.getElementById("viewOutline"),
       attachmentsButton: document.getElementById("viewAttachments"),
+      signatureButton: document.getElementById("viewSignature"),
+
       layersButton: document.getElementById("viewLayers"),
       // Views
       thumbnailView: document.getElementById("thumbnailView"),
       outlineView: document.getElementById("outlineView"),
+      signatureView: document.getElementById("signatureView"),
+
       attachmentsView: document.getElementById("attachmentsView"),
       layersView: document.getElementById("layersView"),
       // View-specific options

@@ -80,6 +80,9 @@ class AnnotationElementFactory {
             return new PushButtonWidgetAnnotationElement(parameters);
           case "Ch":
             return new ChoiceWidgetAnnotationElement(parameters);
+          case "Sig":
+            return new SigWidgetAnnotationElement(parameters);
+
         }
         return new WidgetAnnotationElement(parameters);
 
@@ -619,6 +622,24 @@ class WidgetAnnotationElement extends AnnotationElement {
       }
     }
   }
+}
+
+class SigWidgetAnnotationElement extends WidgetAnnotationElement {
+
+  constructor(parameters) {
+    const isRenderable = true;
+    super(parameters, { isRenderable, createQuadrilaterals: true });
+  }
+  render() {
+    // Show only the container for unsupported field types.
+    this.container.className = "sigwidgetAnnotation";
+
+  
+    return this.container;
+  }
+
+  
+
 }
 
 class TextWidgetAnnotationElement extends WidgetAnnotationElement {

@@ -14,7 +14,6 @@
  */
 
 .annotationLayer section {
-  background-color:red;
   position: absolute;
   text-align: initial;
 }
@@ -205,4 +204,15 @@
 .annotationLayer .stampAnnotation,
 .annotationLayer .fileAttachmentAnnotation {
   cursor: pointer;
+}
+.annotationLayer .sigwidgetAnnotation {
+  cursor: pointer;
+  border: 3cm;
+}
+.annotationLayer .sigwidgetAnnotation:hover {
+  cursor: pointer;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgb(204, 0, 51);
+  color: rgb(5, 115, 175);
 }
