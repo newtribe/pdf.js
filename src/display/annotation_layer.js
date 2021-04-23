@@ -629,6 +629,14 @@ class SigWidgetAnnotationElement extends WidgetAnnotationElement {
   constructor(parameters) {
     const isRenderable = true;
     super(parameters, { isRenderable, createQuadrilaterals: true });
+
+    const data= this.data.file;
+
+    this.linkService.eventBus?.dispatch("sigannotation", {
+      source: this,
+      data: data,
+    });
+
   }
   render() {
     // Show only the container for unsupported field types.

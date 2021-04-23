@@ -81,11 +81,15 @@ class PDFSidebar {
 
     this.thumbnailButton = elements.thumbnailButton;
     this.outlineButton = elements.outlineButton;
+    this.signatureButton = elements.signatureButton;
+
     this.attachmentsButton = elements.attachmentsButton;
     this.layersButton = elements.layersButton;
 
     this.thumbnailView = elements.thumbnailView;
     this.outlineView = elements.outlineView;
+
+    this.signatureView = elements.signatureView;
     this.attachmentsView = elements.attachmentsView;
     this.layersView = elements.layersView;
 
@@ -191,6 +195,11 @@ class PDFSidebar {
           return false;
         }
         break;
+      case SidebarView.Sigatures:
+          if (this.signatureButton.disabled) {
+            return false;
+          }
+          break;
       case SidebarView.ATTACHMENTS:
         if (this.attachmentsButton.disabled) {
           return false;
@@ -218,6 +227,12 @@ class PDFSidebar {
       "toggled",
       view === SidebarView.OUTLINE
     );
+
+    this.signatureButton.classList.toggle(
+      "toggled",
+      view === SidebarView.Sigatures
+    );
+
     this.attachmentsButton.classList.toggle(
       "toggled",
       view === SidebarView.ATTACHMENTS
@@ -226,6 +241,11 @@ class PDFSidebar {
     // ... and for all views.
     this.thumbnailView.classList.toggle("hidden", view !== SidebarView.THUMBS);
     this.outlineView.classList.toggle("hidden", view !== SidebarView.OUTLINE);
+    this.signatureView.classList.toggle(
+      "hidden",
+      view !== SidebarView.Sigatures
+    );
+
     this.attachmentsView.classList.toggle(
       "hidden",
       view !== SidebarView.ATTACHMENTS
@@ -393,6 +413,9 @@ class PDFSidebar {
       this.eventBus.dispatch("toggleoutlinetree", { source: this });
     });
 
+    this.signatureButton.addEventListener("click", () => {
+      this.switchView(SidebarView.Sigatures);
+    });
     this.attachmentsButton.addEventListener("click", () => {
       this.switchView(SidebarView.ATTACHMENTS);
     });

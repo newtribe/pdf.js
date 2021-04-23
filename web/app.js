@@ -62,6 +62,7 @@ import { CursorTool, PDFCursorTools } from "./pdf_cursor_tools.js";
 import { PDFRenderingQueue, RenderingStates } from "./pdf_rendering_queue.js";
 import { OverlayManager } from "./overlay_manager.js";
 import { PasswordPrompt } from "./password_prompt.js";
+import { PDFSignatureViewer } from "./pdf_signature_viewer.js";
 import { PDFAttachmentViewer } from "./pdf_attachment_viewer.js";
 import { PDFDocumentProperties } from "./pdf_document_properties.js";
 import { PDFFindBar } from "./pdf_find_bar.js";
@@ -224,6 +225,8 @@ const PDFViewerApplication = {
   /** @type {PDFOutlineViewer} */
   pdfOutlineViewer: null,
   /** @type {PDFAttachmentViewer} */
+  pdfSigViewer: null,
+
   pdfAttachmentViewer: null,
   /** @type {PDFLayerViewer} */
   pdfLayerViewer: null,
@@ -584,6 +587,11 @@ const PDFViewerApplication = {
       linkService: pdfLinkService,
     });
 
+    this.pdfsigViewer = new PDFSignatureViewer({
+      container: appConfig.sidebar.signatureView,
+      eventBus,
+      downloadManager,
+    });
     this.pdfAttachmentViewer = new PDFAttachmentViewer({
       container: appConfig.sidebar.attachmentsView,
       eventBus,

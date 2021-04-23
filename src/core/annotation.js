@@ -1057,7 +1057,7 @@ class WidgetAnnotation extends Annotation {
       console.info("......in annotation Sig") ;
       // data.fieldValue = null;
       // this.setFlags(AnnotationFlag.HIDDEN);
-      // data.hidden = true;
+       data.hidden = false;
     }
   }
 
