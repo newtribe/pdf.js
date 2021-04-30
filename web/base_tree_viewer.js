@@ -119,7 +119,7 @@ class BaseTreeViewer {
     }
     this.container.appendChild(fragment);
 
-    this._dispatchEvent(count);
+   // this._dispatchEvent(count);
   }
 
   render(params) {

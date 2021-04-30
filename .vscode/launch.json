@@ -1,6 +1,15 @@
 {
     "configurations": [
         {
+            "name": "Launch pdf verify",
+            "program": "${workspaceFolder}/objbrowser/pdfverify.mjs",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
             "name": "pdf js test runtime",
             "type": "chrome",
             "request": "launch",

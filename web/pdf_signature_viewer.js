@@ -15,6 +15,9 @@
 
 import { createPromiseCapability, getFilenameFromUrl } from "pdfjs-lib";
 import { BaseTreeViewer } from "./base_tree_viewer.js";
+//import { PKI } from "./PKITools.js";
+
+
 
 /**
  * @typedef {Object} PDFAttachmentViewerOptions
@@ -42,20 +45,6 @@ class PDFSignatureViewer extends BaseTreeViewer {
     );
   }
 
-  reset(keepRenderedCapability = false) {
-    super.reset();
-    this._attachments = null;
-
-    if (!keepRenderedCapability) {
-      // The only situation in which the `_renderedCapability` should *not* be
-      // replaced is when appending FileAttachment annotations.
-      this._renderedCapability = createPromiseCapability();
-    }
-    if (this._pendingDispatchEvent) {
-      clearTimeout(this._pendingDispatchEvent);
-    }
-    this._pendingDispatchEvent = null;
-  }
 
   /**
    * @private
@@ -88,87 +77,74 @@ class PDFSignatureViewer extends BaseTreeViewer {
     });
   }
 
+
   /**
+   * Used to append signature annotations to the sidebar.
    * @private
    */
-  _bindLink(element, { content, filename }) {
-    element.onclick = () => {
-      this.downloadManager.openOrDownloadData(element, content, filename);
-      return false;
-    };
-  }
 
-  /**
-   * @param {PDFAttachmentViewerRenderParameters} params
-   */
-  render({ attachments, keepRenderedCapability = false }) {
-    if (this._attachments) {
-      this.reset(keepRenderedCapability);
-    }
-    this._attachments = attachments || null;
-
-    if (!attachments) {
-      this._dispatchEvent(/* attachmentsCount = */ 0);
-      return;
-    }
-    const names = Object.keys(attachments).sort(function (a, b) {
-      return a.toLowerCase().localeCompare(b.toLowerCase());
-    });
-
-    const fragment = document.createDocumentFragment();
-    let count = 0;
-    for (const name of names) {
-      const item = attachments[name];
-      const content = item.content,
-        filename = getFilenameFromUrl(item.filename);
-
-      const div = document.createElement("div");
-      div.className = "treeItem";
-
-      const element = document.createElement("a");
-      this._bindLink(element, { content, filename });
-      element.textContent = this._normalizeTextContent(filename);
-
-      div.appendChild(element);
-
-      fragment.appendChild(div);
-      count++;
+   _appendAttachment({ id, data, content }) {
+    try {
+      this.dosignverify({id,data,content});
+    }catch(e){
+      console.error(e);
     }
 
-    this._finishRendering(fragment, attachmentsCount);
-  }
+   }
+   dosignverify({ id, data, content }) {
+  
+      let fieldName =data.fieldName;
+      let appear =data.defaultAppearance;
+      let rect =data.rect ;
+      //==========================
+      //parse asn1 Contents.
+      let contents= data.fieldValue;
+      var contentLength = contents.length;
+      var contentBuffer = new ArrayBuffer(contentLength);
+      var contentView = new Uint8Array(contentBuffer);
 
-  /**
-   * Used to append FileAttachment annotations to the sidebar.
-   * @private
-   */
-  _appendAttachment({ id, filename, content }) {
-    const renderedPromise = this._renderedCapability.promise;
-
-    renderedPromise.then(() => {
-      if (renderedPromise !== this._renderedCapability.promise) {
-        return; // The FileAttachment annotation belongs to a previous document.
+      for (var i = 0; i < contentLength; i++) {
+        contentView[i] = contents.charCodeAt(i);
       }
-      let attachments = this._attachments;
 
-      if (!attachments) {
-        attachments = Object.create(null);
-      } else {
-        for (const name in attachments) {
-          if (id === name) {
-            return; // Ignore the new attachment if it already exists.
-          }
-        }
-      }
-      attachments[id] = {
-        filename,
-        content,
-      };
-      this.render({
-        attachments,
-        keepRenderedCapability: true,
+      var sequence = Promise.resolve();
+      var asn1 = PKI.fromBER(contentBuffer);
+      var cmsContentSimp = new ContentInfo({
+        schema: asn1.result
       });
-    });
+      var cmsSignedSimp = new SignedData({
+        schema: cmsContentSimp.content
+      });
+      //////////////////////
+
+      const fragment = document.createDocumentFragment();
+
+      let count = 0;
+
+  
+        const div = document.createElement("div");
+        div.className = "treeItem";
+  
+        const element = document.createElement("a");
+        element.textContent = this._normalizeTextContent(fieldName);
+
+        const element2 = document.createElement("a");
+        element2.textContent = this._normalizeTextContent(appear);
+
+        const element3 = document.createElement("a");
+        element3.textContent = rect;
+
+        const element4 = document.createElement("a");
+        element4.textContent = data.fieldValue;
+        
+        div.appendChild(element); div.appendChild(element2); div.appendChild(element3);
+        div.appendChild(element4);
+        fragment.appendChild(div);
+       
+      
+  
+      this._finishRendering(fragment, count);
+    
   }
 }
 

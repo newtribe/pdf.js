@@ -1055,9 +1055,11 @@ class WidgetAnnotation extends Annotation {
 
     if (data.fieldType === "Sig") {
       console.info("......in annotation Sig") ;
-      // data.fieldValue = null;
+      data.fieldValue = fieldValue.get("Contents");
+      data.byterange = fieldValue.get("ByteRange");
+
       // this.setFlags(AnnotationFlag.HIDDEN);
-       data.hidden = false;
+      // data.hidden = false;
     }
   }
 

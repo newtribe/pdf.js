@@ -630,7 +630,7 @@ class SigWidgetAnnotationElement extends WidgetAnnotationElement {
     const isRenderable = true;
     super(parameters, { isRenderable, createQuadrilaterals: true });
 
-    const data= this.data.file;
+    const data= this.data;
 
     this.linkService.eventBus?.dispatch("sigannotation", {
       source: this,
