@@ -1,19 +1,18 @@
-"use strict";
+// "use strict";
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+// function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+// function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+// function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+// function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+// function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+// function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-const PKI =(function PKIClosure () {
-  'use strict'; //**************************************************************************************
+  //'use strict'; //**************************************************************************************
   //**************************************************************************************
   // noinspection FunctionWithMultipleReturnPointsJS
 
@@ -12535,8 +12534,24 @@ const PKI =(function PKIClosure () {
   /**
    * Class from RFC5280
    */
+  
+  //newtribe
+  var certoid ={
+    "2.5.4.6":"C",
+    "2.5.4.8":"ST",
+    "2.5.4.7":"L",
+    "2.5.4.10":"O",
+    "2.5.4.11":"OU",
+    "2.5.4.3":"CN"
+  }
 
-
+    //newtribe
+    var supportDigestAlgo ={
+      "1.3.14.3.2.26":"sha-1" ,
+      "2.16.840.1.101.3.4.2.1":"sha-256",
+      "2.16.840.1.101.3.4.2.2":"sha-384",
+      "2.16.840.1.101.3.4.2.3":"sha-512"
+    }
   class AttributeTypeAndValue {
     //**********************************************************************************
 
@@ -12565,6 +12580,14 @@ const PKI =(function PKIClosure () {
       if ("schema" in parameters) this.fromSchema(parameters.schema); //endregion
     } //**********************************************************************************
 
+    toString(){
+
+      let t =this.type ;
+      let tname=certoid[t];
+      if (!tname || tname ==null)
+      tname =t ;
+      return tname+"="+this.value.valueBlock.value ;
+    }
     /**
      * Return default values for all class members
      * @param {string} memberName String name for a class member
@@ -12765,6 +12788,20 @@ const PKI =(function PKIClosure () {
       if ("schema" in parameters) this.fromSchema(parameters.schema); //endregion
     } //**********************************************************************************
 
+    toString(){
+
+      let tv =this.typesAndValues;
+      let result =null;
+      for (let i = 0; i< tv.length ;i++){
+        if (result ==null){
+          result =tv[i].toString()  ;
+        }else 
+        result +=","+tv[i].toString()+"\r\n" ;
+
+      }
+      return result ;
+
+    }
     /**
      * Return default values for all class members
      * @param {string} memberName String name for a class member
@@ -32554,6 +32591,8 @@ const PKI =(function PKIClosure () {
   //*********************************************************************************
 
 
+
+
   var trustedCertificates = []; // Array of Certificates
   //*********************************************************************************
   // noinspection FunctionWithInconsistentReturnsJS
@@ -32787,6 +32826,6 @@ const PKI =(function PKIClosure () {
     setEngine();
   }); //*********************************************************************************
   function context(name, func) {}
-})();
 
-export {PKI}; 
+//window.PKI=PKI ;
+export {fromBER,ContentInfo,SignedData,supportDigestAlgo}; 

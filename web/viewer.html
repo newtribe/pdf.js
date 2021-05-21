@@ -55,8 +55,6 @@ See https://github.com/adobe-type-tools/cmap-resources
         }
       }
     </script>
-    <script src="PKITools.js" type="module-shim"></script>
-
     <script src="viewer.js" type="module-shim"></script>
 <!--#endif-->
 
@@ -115,10 +113,20 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
           <div id="outlineView" class="hidden">
           </div>
-          <div id="signatureView" class="hidden">
-      
+          <div id="signatureView" class="">
+
+     
+          
           </div>
-          <div id="attachmentsView" class="hidden">
+          <div id="attachmentsView">
+          </div>
+          <div id="seal">
+
+            <div  id="seal__1272692342943404032">
+              <img id="seal_1272692342943404032"  src="./images/seal/seal.png"   style="width:151.1811px">
+     
+              <div class="tooltip-inner" style="background-color: #41baea;">选中并拖动签章加盖</div>
+            </div>
           </div>
           <div id="layersView" class="hidden">
           </div>
@@ -315,6 +323,13 @@ See https://github.com/adobe-type-tools/cmap-resources
                     <option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 400 }'>400%</option>
                   </select>
                 </span>
+
+                <div class="splitToolbarButton">
+                  <button id="seal" class="toolbarButton zoomIn"  tabindex="23" data-l10n-id="">
+                    <span data-l10n-id="zoom_out_label">seal</span>
+                  </button>
+               
+                </div>
               </div>
             </div>
             <div id="loadingBar">
@@ -416,6 +431,39 @@ See https://github.com/adobe-type-tools/cmap-resources
             </div>
             <div class="buttonRow">
               <button id="documentPropertiesClose" class="overlayButton"><span data-l10n-id="document_properties_close">Close</span></button>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div id="SigOverlay" class="container hidden">
+          <div class="dialog">
+            <div class="row">
+              <span >签名人信息:</span> <p id="sigerinfo">-</p>
+            </div>
+            <div class="row">
+              <span >数字签名验证结果：</span> <p id="verifyresult">-</p>
+            </div>
+            <div class="separator"></div>
+            <div class="row">
+              <span data-l10n-id="">证书序列号:</span> <p id="certid">-</p>
+            </div>
+            <div class="row">
+              <span data-l10n-id="">摘要算法:</span> <p id="digestalgo">-</p>
+            </div>
+            <div class="row">
+              <span data-l10n-id="">生效时间:</span> <p id="stime">-</p>
+            </div>
+            <div class="row">
+              <span data-l10n-id="">过期时间:</span> <p id="etime">-</p>
+            </div>
+
+            <div class="row">
+              <span data-l10n-id="">签名地点</span> <p id="address">-</p>
+            </div>
+            <div class="buttonRow">
+              <button id="signPropertiesClose" class="overlayButton"><span data-l10n-id="">Close</span></button>
             </div>
           </div>
         </div>

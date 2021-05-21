@@ -15,7 +15,7 @@
 
 import { createPromiseCapability, getFilenameFromUrl } from "pdfjs-lib";
 import { BaseTreeViewer } from "./base_tree_viewer.js";
-//import { PKI } from "./PKITools.js";
+import { fromBER,ContentInfo,SignedData ,supportDigestAlgo} from "./PKITools.js";
 
 
 
@@ -108,15 +108,45 @@ class PDFSignatureViewer extends BaseTreeViewer {
       }
 
       var sequence = Promise.resolve();
-      var asn1 = PKI.fromBER(contentBuffer);
+      var asn1 = fromBER(contentBuffer);
       var cmsContentSimp = new ContentInfo({
         schema: asn1.result
       });
       var cmsSignedSimp = new SignedData({
         schema: cmsContentSimp.content
       });
-      //////////////////////
 
+      var digid =cmsSignedSimp.signerInfos[0].digestAlgorithm.algorithmId ;
+      var digestAlgo="" ;
+      if(digid){
+        digestAlgo =supportDigestAlgo[digid];
+      }
+      console.info("digest algo:"+digestAlgo);
+      //////////////////////
+//       签名者：	051@付伟@0230703198002041014@1
+// 签名状态：	签名有效，证书链完整
+// 证书持有者：	CN = 051@付伟@0230703198002041014@1
+// OU = Individual-1
+// OU = anxinsign
+// O = CFCA RSA OCA31
+// C = CN
+// 证书颁发者：	CN = CFCA ACS OCA31
+// O = China Financial Certification Authority
+// C = CN
+// 序列号：	42 99 66 95 29
+// 生效时间：	2020/08/25 13:49:42
+// 过期时间：	2025/08/25 13:49:42
+// 证书公钥：	RSA (2048)
+// 签名时间：	2021/02/10 12:50:03
+// 时间戳颁发机构：	CN = tss.cfca.com.cn
+// OU = 运行部
+// O = 中金金融认证中心有限公司
+// L = 西城区
+// S = 北京市
+// C = CN
+// 签名原因：	签名
+// 签名地点：	127.0.0.1, 2021-02-10 12:50:03, 113.57.130.110
+// 联系信息：
       const fragment = document.createDocumentFragment();
 
       let count = 0;
@@ -135,7 +165,7 @@ class PDFSignatureViewer extends BaseTreeViewer {
         element3.textContent = rect;
 
         const element4 = document.createElement("a");
-        element4.textContent = data.fieldValue;
+        element4.textContent = cmsSignedSimp;
         
         div.appendChild(element); div.appendChild(element2); div.appendChild(element3);
         div.appendChild(element4);

@@ -1559,6 +1559,33 @@ html[dir="rtl"] .treeItemToggler::before {
 #documentPropertiesOverlay .row > * {
   min-width: 100px;
 }
+
+#SigOverlay > .dialog {
+  text-align: left;
+}
+#SigOverlay .row > * {
+  min-width: 100px;
+}
+html[dir="ltr"] #SigOverlay .row > * {
+  text-align: left;
+}
+html[dir="rtl"] #SigOverlay .row > * {
+  text-align: right;
+}
+#SigOverlay .row > span {
+  width: 125px;
+  word-wrap: break-word;
+}
+#SigOverlay .row > p {
+  max-width: 225px;
+  word-wrap: break-word;
+}
+#SigOverlay .buttonRow {
+  margin-top: 10px;
+}
+
+
+
 html[dir="ltr"] #documentPropertiesOverlay .row > * {
   text-align: left;
 }

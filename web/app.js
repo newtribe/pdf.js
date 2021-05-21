@@ -81,6 +81,7 @@ import { SecondaryToolbar } from "./secondary_toolbar.js";
 import { Toolbar } from "./toolbar.js";
 import { viewerCompatibilityParams } from "./viewer_compatibility.js";
 import { ViewHistory } from "./view_history.js";
+import { SigninfoPrompt } from "./signinfo_prompt.js";
 
 const DEFAULT_SCALE_DELTA = 1.1;
 const DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 5000; // ms
@@ -552,6 +553,13 @@ const PDFViewerApplication = {
       this.l10n
     );
 
+    this.signerProp = new SigninfoPrompt(
+      appConfig.signProp,
+      this.overlayManager,
+      eventBus,
+      this.l10n
+    );
+
     this.pdfCursorTools = new PDFCursorTools({
       container,
       eventBus,
@@ -824,6 +832,7 @@ const PDFViewerApplication = {
       this.pdfViewer.setDocument(null);
       this.pdfLinkService.setDocument(null);
       this.pdfDocumentProperties.setDocument(null);
+
     }
     webViewerResetPermissions();
     this.store = null;

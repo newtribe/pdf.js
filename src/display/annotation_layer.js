@@ -639,10 +639,13 @@ class SigWidgetAnnotationElement extends WidgetAnnotationElement {
 
   }
   render() {
-    // Show only the container for unsupported field types.
+    
     this.container.className = "sigwidgetAnnotation";
-
-  
+   // this.container.addEventListener("click", window.PDFViewerApplication.signerProp.open.bind());
+    this.container.onclick = () => {
+      
+      window.PDFViewerApplication.signerProp.open(this.data);
+    };
     return this.container;
   }
 

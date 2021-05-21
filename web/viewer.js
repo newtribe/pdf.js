@@ -193,6 +193,21 @@ function getViewerConfiguration() {
         linearized: document.getElementById("linearizedField"),
       },
     },
+    signProp: {
+      overlayName: "SigOverlay",
+      container: document.getElementById("SigOverlay"),
+      cancelButton: document.getElementById("signPropertiesClose"),
+      fields: {
+        sigerinfo: document.getElementById("sigerinfo"),
+        verifyresult: document.getElementById("verifyresult"),
+        certid: document.getElementById("certid"),
+        stime: document.getElementById("stime"),
+        etime: document.getElementById("etime"),
+        digestalgo: document.getElementById("digestalgo"),
+        address: document.getElementById("address"),
+
+      },
+    },
     errorWrapper,
     printContainer: document.getElementById("printContainer"),
     openFileInputName: "fileInput",
