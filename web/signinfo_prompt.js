@@ -27,6 +27,10 @@
  */
  import { fromBER,ContentInfo,SignedData ,supportDigestAlgo} from "./PKITools.js";
 
+ function $(objid){
+
+  return document.getElementById(objid);
+}
 class SigninfoPrompt {
   /**
    * @param {PasswordPromptOptions} options
@@ -58,6 +62,7 @@ class SigninfoPrompt {
       true
     );
   }
+   trustedCertificates = []; // Array of Certificates
 
   async open(data) {
     console.info(".........signer click ...") ;
@@ -68,6 +73,7 @@ class SigninfoPrompt {
     //==========================
     //parse asn1 Contents.
     let contents= data.fieldValue;
+
     var contentLength = contents.length;
     var contentBuffer = new ArrayBuffer(contentLength);
     var contentView = new Uint8Array(contentBuffer);
@@ -76,7 +82,6 @@ class SigninfoPrompt {
       contentView[i] = contents.charCodeAt(i);
     }
 
-    var sequence = Promise.resolve();
     var asn1 = fromBER(contentBuffer);
     var cmsContentSimp = new ContentInfo({
       schema: asn1.result
@@ -91,18 +96,69 @@ class SigninfoPrompt {
       digestAlgo =supportDigestAlgo[digid];
     }
     console.info("digest algo:"+digestAlgo);
-
     this.fields.sigerinfo.textContent =cmsSignedSimp.certificates[0].subject.toString();
-
-
     this.fields.digestalgo.textContent =digestAlgo;
-    this.fields.address.textContent ="";
-
-    this.fields.verifyresult.textContent="通过";
+    this.fields.address.textContent =data.Location +data.Reason;
     this.fields.stime.textContent=cmsSignedSimp.certificates[0].notBefore.value ;
     this.fields.etime.textContent=cmsSignedSimp.certificates[0].notAfter.value;
+    /**
+     * verify ds
+     */
+     let byteRange = data.byterange;
 
-  
+     var doc =window.PDFViewerApplication.pdfDocument;
+    
+     var message =this.fields.verifyresult ;
+     doc.getData().then(function (stramdata) {
+       const blob = new Blob([stramdata], { type: "application/pdf" });
+       var view = new Uint8Array(stramdata);
+
+     var signedDataBuffer = new ArrayBuffer(byteRange[1] + byteRange[3]);
+     var signedDataView = new Uint8Array(signedDataBuffer);
+     var count = 0;
+
+     for (var i = byteRange[0]; i < byteRange[0] + byteRange[1]; i++, count++) {
+       signedDataView[count] = view[i];
+     }
+
+     for (var j = byteRange[2]; j < byteRange[2] + byteRange[3]; j++, count++) {
+       signedDataView[count] = view[j];
+     }
+
+
+     var sequence = Promise.resolve();
+
+     sequence = sequence.then(() => cmsSignedSimp.verify({
+      signer: 0,
+      data: signedDataBuffer //,trustedCerts: trustedCertificates
+    }));
+     sequence = sequence.then(result => {
+      if (typeof result !== "undefined") {
+        if (result === true) {
+          console.info("PDF successfully verified!");
+        //message.textContent="通过";
+         $("verifyresult").textContent="验证状态：签名有效"
+         $("verifyresult").style.color="green" ;
+        }else {
+          $("verifyresult").textContent="验证未通过"
+          $("verifyresult").style.color="red" ;
+          console.info("PDF verification failed!");
+
+        }
+      }
+
+    },e => {
+      　console.log(e);
+    
+    }
+      
+      );
+
+
+     
+     });
+
+     
     await this.overlayManager.open(this.overlayName);
 
     // for (const id in this.fields) {

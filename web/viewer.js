@@ -217,6 +217,8 @@ function getViewerConfiguration() {
 
 function webViewerLoad() {
   const config = getViewerConfiguration();
+  AppOptions.set("defaultUrl", "./013002030011-85318896.pdf");
+
   if (typeof PDFJSDev === "undefined" || !PDFJSDev.test("PRODUCTION")) {
     Promise.all([
       import("pdfjs-web/genericcom.js"),
@@ -253,6 +255,8 @@ function webViewerLoad() {
     PDFViewerApplication.run(config);
   }
 }
+
+
 
 // Block the "load" event until all pages are loaded, to ensure that printing
 // works in Firefox; see https://bugzilla.mozilla.org/show_bug.cgi?id=1618553

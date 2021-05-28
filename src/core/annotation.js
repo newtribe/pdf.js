@@ -1057,7 +1057,10 @@ class WidgetAnnotation extends Annotation {
       console.info("......in annotation Sig") ;
       data.fieldValue = fieldValue.get("Contents");
       data.byterange = fieldValue.get("ByteRange");
-
+      data.filter =fieldValue.get("Filter");
+      data.SubFilter =fieldValue.get("SubFilter");
+      data.Reason =fieldValue.get("Reason");
+      data.Location =fieldValue.get("Location");
       // this.setFlags(AnnotationFlag.HIDDEN);
       // data.hidden = false;
     }
