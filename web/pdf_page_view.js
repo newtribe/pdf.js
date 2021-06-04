@@ -202,6 +202,9 @@ class PDFPageView {
       if (currentZoomLayerNode === node || currentAnnotationNode === node) {
         continue;
       }
+      if(node.className.includes("seal")){
+        continue ;
+      }
       div.removeChild(node);
     }
     div.removeAttribute("data-loaded");
