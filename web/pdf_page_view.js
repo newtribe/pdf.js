@@ -202,8 +202,8 @@ class PDFPageView {
       if (currentZoomLayerNode === node || currentAnnotationNode === node) {
         continue;
       }
-      if(node.className.includes("seal")){
-        continue ;
+      if (node.className.includes("show")) {//newtribe
+        continue;
       }
       div.removeChild(node);
     }
@@ -273,7 +273,7 @@ class PDFPageView {
       const outputScale = this.outputScale;
       if (
         ((Math.floor(this.viewport.width) * outputScale.sx) | 0) *
-          ((Math.floor(this.viewport.height) * outputScale.sy) | 0) >
+        ((Math.floor(this.viewport.height) * outputScale.sy) | 0) >
         this.maxCanvasPixels
       ) {
         isScalingRestricted = true;
@@ -683,8 +683,8 @@ class PDFPageView {
       // "TypeError: paintTask.promise is undefined".
       return {
         promise: Promise.reject(new Error("SVG rendering is not supported.")),
-        onRenderContinue(cont) {},
-        cancel() {},
+        onRenderContinue(cont) { },
+        cancel() { },
       };
     }
 

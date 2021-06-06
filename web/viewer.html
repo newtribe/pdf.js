@@ -69,15 +69,6 @@ See https://github.com/adobe-type-tools/cmap-resources
   <!--#include viewer-snippet-minified.html-->
   <!--#endif-->
   <script>
-
-// class Seal {
-//   constructor(){
-
-//   }
-
-// }
-
-
   </script>
 </head>
 
@@ -132,21 +123,35 @@ See https://github.com/adobe-type-tools/cmap-resources
         </div>
         <div id="outlineView" class="hidden">
         </div>
-        <div id="signatureView" class="">
-
-
+        <div id="signatureView" class="hidden">
 
         </div>
         <div id="attachmentsView" class="hidden">
         </div>
         <div id="seal">
 
-          <div id="seal_001" draggable="true" class="dragAble sealTmp">
-            <img id="image_001" src="./images/seal/seal.png" style="width:151.1811px" class="dragAble sealTmp">
+          <div id="seal_001" draggable="true" class="seal">
+            <div class="tooltip-inner" style="background-color: #41baea;">盖章</div>
+
+            <img src="./images/seal/seal.png" style="width:100px" class="seal">
+
+          </div>
+        </div>
+
+        <div id="qifeng_seal">
+
+          <div id="seal_002" draggable="true" class="seal qifeng_seal">
+            <div class="tooltip-inner" style="background-color: #41baea;">骑缝章</div>
+
+            <img src="./images/seal/qifeng.png" style="width:100px" class="seal qifeng_seal">
 
             <div class="tooltip-inner" style="background-color: #41baea;">拖动签章加盖</div>
           </div>
         </div>
+
+
+
+
         <div id="layersView" class="hidden">
         </div>
       </div>
