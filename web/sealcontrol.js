@@ -16,8 +16,11 @@ class SealControl {
     this.nTy;
     this.pageViewContainer;
     //this.sealinfos = new Array();
-    this.pageSeals = new Array();
-    this.sealMap = [];
+    this.pageSeals = [];
+    this.pageQifeng = [];
+    this.pageHandwrite = [];
+    this.pageAnnotions = [];
+    this.sealMap = []; //存储拖动对象索引，Mousedown attach to a seal oob .
     this.app = app;
   }
 
@@ -27,20 +30,10 @@ class SealControl {
     document.addEventListener("mousemove", this.moveMouse.bind(this));
     document.addEventListener("mouseup", this.stopDrag.bind(this));
 
-    let sealsource = this.getallobj(".seal");
-    for (var i = 0; i < sealsource.length; i++)
-      sealsource[i].addEventListener("click", (ev) => {
-        ev.preventDefault();
-        ev.stopPropagation();
-
-        var se = ev.srcElement;
-        var qifeng = se.className.includes("qifeng_seal");
-        var sealtype = qifeng ? SealType.QIFENG : SealType.COMMON_SEAL;
-        var img = se.src;
-        this.createNewSeal(0, 0, sealtype, img);
-
-        return false;
-      });
+    const sealsource = this.getallobj(".seal");
+    for (let i = 0; i < sealsource.length; i++) {
+      sealsource[i].addEventListener("click", this.newSealonclick.bind(this));
+    }
     // window.ondrop=this.stopDrag.bind(this);
     // document.addEventListener("click", this.createNewSeal.bind(this));
     // document.onmousedown = this.initDrag;
@@ -76,17 +69,16 @@ class SealControl {
       ev.preventDefault();
       ev.stopPropagation();
       if (this.isDragStart === true) {
-        var se = this.oDragObj;
-
-        var qifeng = se.className.includes("qifeng_seal");
-
-        var sealtype = qifeng ? SealType.QIFENG : SealType.COMMON_SEAL;
-        var img = se.src;
+        const se = this.oDragObj;
+        const img = se.src;
+        const typeAttr = se.getAttribute("type");
+        const sealtype = parseInt(typeAttr);
 
         this.createNewSeal(ev.offsetX, ev.offsetY, sealtype, img);
 
-        this.isDragStart = false;
       }
+      this.isDragStart = false;
+
     });
 
 
@@ -211,7 +203,7 @@ class SealControl {
     // check boundry in the page view container .
     const sealobj = seal.getSealObj();
 
-    const sealWidth = sealobj.style.width;
+    const sealWidth = sealobj.getAttribute("origin");
     const w = parseInt(sealWidth);
 
     if (mLeft < 0) {
@@ -237,86 +229,32 @@ class SealControl {
   }
 
   // document.ondragover=allowDrop;
+  newSealonclick(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    const se = ev.srcElement;
+    // var qifeng = se.className.includes("qifeng_seal");
+    // var sealtype = qifeng ? SealType.QIFENG : SealType.COMMON_SEAL;
+    const img = se.src;
+    const typeAttr = se.getAttribute("type");
+    const sealtype = parseInt(typeAttr);
+
+    this.createNewSeal(0, 0, sealtype, img);
+
+    return false;
+  }
 
   createNewSeal(x, y, type, image) {
+    if (type === SealType.QIFENG && this.pageQifeng.length > 0) {
+      alert("骑缝章已经存在!");
+      return;
+    }
     const seal = new SealInfo(this, x, y);
     seal.setType(type);
     seal.setImage(image);
     seal.createSeal();
-  }
 
-  createNewSeal2(x, y) {
-    console.info(".....");
-
-    const vapp = window.PDFViewerApplication;
-    const curpage = vapp.page;
-
-    const curView = vapp.appConfig.viewerContainer.childNodes[curpage - 1];
-    //curView = curView.getElementByclassName("annotationLayer");
-    this.pageViewContainer = curView;
-    // to be append
-
-    //  var sealNode=document.createElement("div");
-    //  sealNode.setAttribute("id","seal_001");
-    //  sealNode.style="z-index: 1;position: absolute";
-    //  sealNode.style.class="dragAble";
-    //  sealNode.insertAdjacentHTML("afterBegin","<img id='image_001' draggable='true' src='./images/seal/seal.png' style='width:151px'");
-    //  curView.appendChild(sealNode);
-
-    const maxwidth = parseInt(this.pageViewContainer.style.width);
-    const maxheight = parseInt(this.pageViewContainer.style.height);
-    let mLeft = x,
-      mTop = y;
-    if (mLeft < 0) {
-      mLeft = 0;
-    }
-    if (mLeft > maxwidth) {
-      mLeft = maxwidth;
-    }
-    if (mTop < 0) {
-      mTop = 0;
-    }
-    if (mTop > maxheight) {
-      mTop = maxheight;
-    }
-
-    let pageSeals = this.pageSeals;
-    let sealid;
-    let sealinfos = pageSeals[curpage - 1]; //get current page seals 
-    if (!sealinfos || sealinfos.length == 0) {//no seals in the current page 
-
-      sealid = "seal_info_" + curpage + "_0";
-      sealinfos = new Array();
-      pageSeals[curpage - 1] = sealinfos;
-    } else {
-
-      let len = sealinfos.length;
-      sealid = "seal_info_" + curpage + "_" + len++;
-
-    }
-    const str =
-      "<div id='" + sealid + "'    class='dragAble seal' style='z-index: 1;position: absolute;top:" +
-      mTop +
-      "px;left:" +
-      mLeft +
-      "px'>" +
-      "<img id='image_sub_001'  src='./images/seal/seal.png' style='width:150px'></div>";
-
-    // var seal = document.createElement('div');
-    // seal.innerHTML = str;
-    // 1.     beforeBegin: 插入到标签开始前
-    // 2.     afterBegin:插入到标签开始标记之后
-
-    // 3.     beforeEnd:插入到标签结束标记前
-
-    // 4.     afterEnd:插入到标签结束标记后
-    // eslint-disable-next-line no-unsanitized/method
-    curView.insertAdjacentHTML("afterBegin", str);
-    const sealobj = this.getobj(sealid);
-
-    const sinfo = new SealInfo(sealobj)
-    sealinfos.push(sinfo);
-    // curView.appendChild(seal);
   }
 }
 const SealType = {
@@ -326,7 +264,7 @@ const SealType = {
   BARCODE: 3,
 }
 class SealInfo {
-  constructor(sealcontrol, x = 0, y = 0, scale = 1, width = 30, img = "") {
+  constructor(sealcontrol, x = 0, y = 0, scale = 1, width = 100, img = "") {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -358,42 +296,43 @@ class SealInfo {
     //  sealNode.insertAdjacentHTML("afterBegin","<img id='image_001' draggable='true' src='./images/seal/seal.png' style='width:151px'");
     //  curView.appendChild(sealNode);
 
-    // const maxwidth = parseInt(this.sealContainer.style.width);
-    // const maxheight = parseInt(this.sealContainer.style.height);
-    //  let mLeft = this.x,
-    //    mTop = this.y;
-    // if (mLeft < 0) {
-    //   mLeft = 0;
-    // }
-    // if (mLeft > maxwidth) {
-    //   mLeft = maxwidth;
-    // }
-    // if (mTop < 0) {
-    //   mTop = 0;
-    // }
-    // if (mTop > maxheight) {
-    //   mTop = maxheight;
-    // }
-
-    const pageSeals = this.sealcontrol.pageSeals;
     let sealid;
-    let sealinfos = pageSeals[curpage - 1]; //get current page seals 
-    if (!sealinfos || sealinfos.length == 0) {//no seals in the current page 
 
-      sealid = "seal_info_" + curpage + "_0";
-      sealinfos = new Array();
-      pageSeals[curpage - 1] = sealinfos;
-    } else {
-
-      let len = sealinfos.length;
-      sealid = "seal_info_" + curpage + "_" + len++;
-
-    }
 
     const scale = pageview.scale;
+    const qifengclass = (this.getType() === SealType.QIFENG) ? "qifeng_sub" : "";
 
-    const str =
-      "<div id='" + sealid + "'    class='dragAble show' style='width:100px;z-index: 1;position: absolute;top:" +
+    let str = null;
+    if (this.getType() === SealType.QIFENG) {
+      const pageQifeng = this.sealcontrol.pageQifeng;
+
+      let len = pageQifeng.length;
+      sealid = "seal_info_qifeng_" + curpage + "_" + len++;
+
+
+      str = "<div id='" + sealid + "'    class='dragAble show qifeng_sub' origin=100px style='width:20px;z-index: 1;position: absolute;top:";
+      pageQifeng.push(this);
+    } else {
+
+      const pageSeals = this.sealcontrol.pageSeals;
+      let sealinfos = pageSeals[curpage - 1]; //get current page seals 
+      if (!sealinfos || sealinfos.length == 0) {//no seals in the current page 
+
+        sealid = "seal_info_" + curpage + "_0";
+        sealinfos = new Array();
+        pageSeals[curpage - 1] = sealinfos;
+      } else {
+
+        let len = sealinfos.length;
+        sealid = "seal_info_" + curpage + "_" + len++;
+
+      }
+
+      str = "<div id='" + sealid + "'    class='dragAble show' origin=100px style='width:100px;z-index: 1;position: absolute;top:";
+      sealinfos.push(this);
+
+    }
+    str +=
       this.y +
       "px;left:" +
       this.x +
@@ -414,9 +353,9 @@ class SealInfo {
     curView.insertAdjacentHTML("afterBegin", str);
     const sealobj = this.sealcontrol.getobj(sealid);
     this.sealobj = sealobj;
-    this.sealcontrol.sealMove(this, this.x, this.y)
-    sealinfos.push(this);
-    this.sealcontrol.sealMap[sealid] = this;
+    this.sealcontrol.sealMove(this, this.x, this.y);
+
+    this.sealcontrol.sealMap[sealid] = this; //update index .
     // curView.appendChild(seal);
   }
 

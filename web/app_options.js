@@ -14,7 +14,6 @@
  */
 
 import { viewerCompatibilityParams } from "./viewer_compatibility.js";
-
 const OptionKind = {
   VIEWER: 0x02,
   API: 0x04,
