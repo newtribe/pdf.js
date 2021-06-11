@@ -82,6 +82,27 @@ See https://github.com/adobe-type-tools/cmap-resources
       margin-left: 0;
     }
   </style>
+  <script>
+  
+  function request(){
+
+    const xhr = new XMLHttpRequest();
+     xhr.setRequestHeader('content-type', 'application/json');
+
+      xhr.onload = function () {
+        alert(xhr.response);
+        var result = JSON.parse(xhr.responseText);	
+
+      };
+      var url ="http://localhost:8080/seal"
+      xhr.open("GET", url);
+   
+      var sendData = {captcha:this.value};
+    //将用户输入值序列化成字符串
+     xhr.send(JSON.stringify(sendData));
+  }
+
+  </script>
 </head>
 
 <body tabindex="1">
